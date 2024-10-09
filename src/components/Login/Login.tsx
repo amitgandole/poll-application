@@ -2,6 +2,7 @@ import { Button, Col, Form, Input, Row, Select } from "antd";
 import { UserOutlined } from "@ant-design/icons";
 import "./Login.css";
 import { useState } from "react";
+import { LOGIN_BG_IMAGE_URL } from "../../utils/Constants";
 
 const { Option } = Select;
 
@@ -15,11 +16,7 @@ const Login: React.FC = () => {
   return (
     <Row className="login-page">
       <Col span={12} className="login-image-container">
-        <img
-          src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSfD44m9BNOi165qaGmWkp1--f2YKw0R56T3g&s"
-          alt="Login"
-          className="login-image"
-        />
+        <img src={LOGIN_BG_IMAGE_URL} alt="Login" className="login-image" />
       </Col>
       <Col span={12} className="login-form-container">
         <Row justify={"center"} align={"middle"} className="form-row">

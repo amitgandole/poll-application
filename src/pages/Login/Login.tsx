@@ -1,15 +1,15 @@
 import { Button, Col, Form, Input, message, Row, Select } from "antd";
 import { UserOutlined } from "@ant-design/icons";
 import { useEffect, useState } from "react";
+import { useNavigate } from "react-router-dom";
 
 // Utils and types
-import { LOGIN_BG_IMAGE_URL } from "../../utils/Constants";
+import { LOGO_URL, ROLE } from "../../utils/Constants";
 import { User } from "../../interfaces/User";
 
 // Redux imports
-import { login } from "../../reducers/authReducer";
-import { RootState } from "../../redux/store";
-import { useDispatch, useSelector } from "react-redux";
+import { login } from "./authReducer";
+import { useDispatch } from "react-redux";
 
 // Custom hooks
 import useLocalStorage from "../../utils/useLocalStorage";
@@ -20,15 +20,25 @@ import generateUniqueId from "../../utils/useUniqueId";
 
 const { Option } = Select;
 
-const Login: React.FC = () => {
+const Login = () => {
   const [isRegistration, setIsRegistration] = useState(false);
   const [users, setUsers] = useLocalStorage("users", []);
+  const [currentLoggedInUser, setCurrentLoggedInUser] = useLocalStorage(
+    "currentLoggedInUser",
+    []
+  );
+
   const dispatch = useDispatch();
-  const loggedInUser = useSelector((state: RootState) => state.auth);
+  const navigate = useNavigate();
+
+  useEffect(() => {
+    if (currentLoggedInUser.length) {
+      message.success(`Welcome back, ${currentLoggedInUser[0].firstName}`);
+      navigate("/home");
+    }
+  }, [currentLoggedInUser]);
 
   const onFinish = (credentials: User) => {
-    console.log(loggedInUser);
-    console.log("Login Form Submitted:", credentials);
     if (isRegistration) {
       manageRegistration(credentials);
       return;
@@ -64,14 +74,16 @@ const Login: React.FC = () => {
       );
       return;
     }
-    message.success(`Welcome back, ${foundUser.firstName}`);
+
+    foundUser.isLoggedIn = true;
+    setCurrentLoggedInUser([foundUser]);
     dispatch(login(foundUser));
   };
 
   return (
     <Row className="login-page">
       <Col span={12} className="login-image-container">
-        <img src={LOGIN_BG_IMAGE_URL} alt="Login" className="login-image" />
+        <img src={LOGO_URL} alt="Login" className="login-image" />
       </Col>
       <Col span={12} className="login-form-container">
         <Row justify={"center"} align={"middle"} className="form-row">
@@ -101,8 +113,12 @@ const Login: React.FC = () => {
                   ]}
                 >
                   <Select placeholder="Select Role" className="input-field">
-                    <Option value="admin">Admin</Option>
-                    <Option value="user">User</Option>
+                    <Option value={ROLE.ADMIN.value}>
+                      {ROLE.ADMIN.displayText}
+                    </Option>
+                    <Option value={ROLE.USER.value}>
+                      {ROLE.USER.displayText}
+                    </Option>
                   </Select>
                 </Form.Item>
               )}

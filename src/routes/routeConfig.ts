@@ -5,6 +5,10 @@ const Home = lazy(() => import("../pages/Home/Home"));
 const AdminHome = lazy(() => import("../pages/Home/Admin/AdminHome"));
 const UserHome = lazy(() => import("../pages/Home/User/UserHome"));
 
+const ActivePoll = lazy(() => import("../pages/Home/Admin/ActivePoll"));
+const CreatePoll = lazy(() => import("../pages/Home/Admin/CreatePoll"));
+const ClosedPoll = lazy(() => import("../pages/Home/Admin/ClosedPoll"));
+
 interface Route {
   path: string;
   component: () => JSX.Element;
@@ -21,6 +25,9 @@ export const PATHS = {
   login: "/login",
   admin_home: "admin-home",
   user_home: "user-home",
+  active_poll: "active-polls",
+  create_poll: "create-poll",
+  closed_poll: "closed-polls",
 };
 
 export const PRIVATE_ROUTES: LazyRoute[] = [
@@ -31,6 +38,18 @@ export const PRIVATE_ROUTES: LazyRoute[] = [
       {
         path: PATHS.admin_home,
         component: AdminHome,
+      },
+      {
+        path: PATHS.active_poll,
+        component: ActivePoll,
+      },
+      {
+        path: PATHS.closed_poll,
+        component: ClosedPoll,
+      },
+      {
+        path: PATHS.create_poll,
+        component: CreatePoll,
       },
       {
         path: PATHS.user_home,

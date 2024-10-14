@@ -3,6 +3,7 @@ import {
   Route,
   Routes,
   BrowserRouter as Router,
+  Link,
 } from "react-router-dom";
 import { AUTH_ROUTES, PATHS, PRIVATE_ROUTES } from "./routeConfig";
 import RequiredAuth from "./RequiredAuth";
@@ -58,7 +59,15 @@ const PageRoutes = () => {
             }
           />
 
-          <Route path="*" element={<Navigate to="/home" />} />
+          <Route
+            path="*"
+            element={
+              <div>
+                Page Not Found! Navigate to home? <br />
+                <Link to="/home">Go to Home</Link>
+              </div>
+            }
+          />
         </Routes>
       </Suspense>
     </Router>

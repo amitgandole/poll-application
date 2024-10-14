@@ -1,5 +1,3 @@
-import { useSelector } from "react-redux";
-import { RootState } from "../redux/store";
 import { Navigate } from "react-router-dom";
 import useLocalStorage from "../utils/useLocalStorage";
 

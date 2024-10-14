@@ -43,7 +43,7 @@ const Home = () => {
     <Layout className="layout">
       <Header className="header">
         <div className="logo">
-          <img src={LOGO_URL} className="logo-image" />
+          <img src={LOGO_URL} alt="logo" className="logo-image" />
         </div>
 
         <div className="center-text">

@@ -1,13 +1,20 @@
 import { lazy, LazyExoticComponent } from "react";
 import Login from "../pages/Login/Login";
+import { PATHS } from "../utils/Constants";
 
 const Home = lazy(() => import("../pages/Home/Home"));
 const AdminHome = lazy(() => import("../pages/Home/Admin/AdminHome"));
 const UserHome = lazy(() => import("../pages/Home/User/UserHome"));
 
-const ActivePoll = lazy(() => import("../pages/Home/Admin/ActivePoll"));
-const CreatePoll = lazy(() => import("../pages/Home/Admin/CreatePoll"));
-const ClosedPoll = lazy(() => import("../pages/Home/Admin/ClosedPoll"));
+const ActivePoll = lazy(
+  () => import("../pages/Home/Admin/admin-poll-pages/ActivePoll")
+);
+const CreatePoll = lazy(
+  () => import("../pages/Home/Admin/admin-poll-pages/create-poll/CreatePoll")
+);
+const ClosedPoll = lazy(
+  () => import("../pages/Home/Admin/admin-poll-pages/ClosedPoll")
+);
 
 interface Route {
   path: string;
@@ -19,16 +26,6 @@ interface LazyRoute {
   component: LazyExoticComponent<() => JSX.Element>;
   children?: LazyRoute[];
 }
-
-export const PATHS = {
-  home: "/home",
-  login: "/login",
-  admin_home: "admin-home",
-  user_home: "user-home",
-  active_poll: "active-polls",
-  create_poll: "create-poll",
-  closed_poll: "closed-polls",
-};
 
 export const PRIVATE_ROUTES: LazyRoute[] = [
   {

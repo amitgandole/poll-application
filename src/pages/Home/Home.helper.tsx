@@ -1,11 +1,12 @@
-import { PATHS } from "../../routes/routeConfig";
 import { Location, NavigateFunction } from "react-router-dom";
 import { MenuProps } from "antd";
 import {
   CloseCircleOutlined,
   EditOutlined,
+  HomeOutlined,
   LaptopOutlined,
 } from "@ant-design/icons";
+import { KEY_TO_ROUTE, PATHS } from "../../utils/Constants";
 
 export const handleRoleBasedNavigation = (
   location: Location,
@@ -25,16 +26,16 @@ export const getSelectedKey = (location: Location): string => {
   if (location.pathname.includes("create-poll")) return "1";
   if (location.pathname.includes("active-polls")) return "2";
   if (location.pathname.includes("closed-polls")) return "3";
+  if (location.pathname.includes("/home")) return "4";
   return "";
 };
 
-export const keyToRoute: { [key: string]: string } = {
-  "1": "create-poll",
-  "2": "active-polls",
-  "3": "closed-polls",
-};
-
 export const getSiderMenu = (): MenuProps["items"] => [
+  {
+    key: "4",
+    icon: <HomeOutlined className="sider-icon" />,
+    label: "Go To Home",
+  },
   {
     key: "2",
     icon: <LaptopOutlined className="sider-icon" />,
@@ -56,7 +57,7 @@ export const handleSiderMenuClick = (
   e: { key: string },
   navigate: NavigateFunction
 ) => {
-  const route = keyToRoute[e.key];
+  const route = KEY_TO_ROUTE[e.key];
   if (route) {
     navigate(route);
   }

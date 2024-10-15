@@ -11,3 +11,20 @@ export const ROLE = {
     displayText: "Employee",
   },
 };
+
+export const PATHS = {
+  home: "/home",
+  login: "/login",
+  admin_home: "admin-home",
+  user_home: "user-home",
+  active_poll: "active-polls",
+  create_poll: "create-poll",
+  closed_poll: "closed-polls",
+};
+
+export const KEY_TO_ROUTE: { [key: string]: string } = {
+  "1": "create-poll",
+  "2": "active-polls",
+  "3": "closed-polls",
+  "4": PATHS.home,
+};

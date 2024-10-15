@@ -5,10 +5,11 @@ import {
   BrowserRouter as Router,
   Link,
 } from "react-router-dom";
-import { AUTH_ROUTES, PATHS, PRIVATE_ROUTES } from "./routeConfig";
+import { AUTH_ROUTES, PRIVATE_ROUTES } from "./routeConfig";
 import RequiredAuth from "./RequiredAuth";
 import { Suspense } from "react";
 import useLocalStorage from "../utils/useLocalStorage";
+import { PATHS } from "../utils/Constants";
 
 const PageRoutes = () => {
   const [currentUser] = useLocalStorage("currentLoggedInUser", []);

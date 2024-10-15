@@ -70,7 +70,7 @@ const Home = () => {
         </Button>
       </Header>
       <Layout>
-        <Sider width="15%" theme="light" className="sider" collapsed={true}>
+        <Sider width="10%" theme="light" className="sider">
           <Menu
             mode="inline"
             selectedKeys={[getSelectedKey(location)]}

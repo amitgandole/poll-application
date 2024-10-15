@@ -10,7 +10,7 @@ export interface Question {
 }
 
 export interface Poll {
-  id: string;
+  id: number;
   label: string;
   status: string;
   createdBy: string;

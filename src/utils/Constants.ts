@@ -23,8 +23,8 @@ export const PATHS = {
 };
 
 export const KEY_TO_ROUTE: { [key: string]: string } = {
-  "1": "create-poll",
-  "2": "active-polls",
-  "3": "closed-polls",
+  "1": PATHS.create_poll,
+  "2": PATHS.active_poll,
+  "3": PATHS.closed_poll,
   "4": PATHS.home,
 };

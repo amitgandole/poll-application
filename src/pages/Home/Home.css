@@ -15,6 +15,17 @@
   position: relative;
 }
 
+.sider {
+  border: 1-px;
+  border-radius: 10px;
+  margin: 10px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
+}
+
+.sider-icon {
+  color: #001529 !important;
+}
+
 .logo {
   flex: 0 1 auto;
 }
@@ -38,7 +49,6 @@
 .content {
   flex: 1;
   padding: 24px;
-  background-color: #f0f2f5;
 }
 
 .footer {

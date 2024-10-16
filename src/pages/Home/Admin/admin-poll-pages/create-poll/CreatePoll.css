@@ -1,0 +1,69 @@
+.poll-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  margin: 20px;
+}
+
+.poll-title-card {
+  width: 100%;
+  max-width: 500px;
+  margin-bottom: 20px;
+}
+
+.scrollable-cards {
+  max-height: 400px;
+  overflow-y: auto;
+}
+
+.draft-poll-card {
+  margin: 10px;
+}
+
+.draft-card-content {
+  display: flex;
+  justify-content: space-between;
+}
+
+.draft-poll-card:hover {
+  border-left: 10px solid rgb(31, 195, 236);
+  cursor: pointer;
+  font-weight: bold;
+}
+
+.poll-list-item {
+  padding: 10px;
+  border-bottom: 1px solid #f0f0f0;
+}
+
+.create-poll {
+  margin-top: 20px;
+  margin-bottom: 20px;
+}
+
+.add-poll-icon {
+  font-size: 32px; /* Make the icon larger */
+  cursor: pointer;
+  color: #1890ff;
+}
+
+.actions {
+  display: flex;
+  justify-content: space-between;
+  margin-top: 10px;
+}
+
+.edit-icon {
+  font-size: 18px;
+  color: #000;
+}
+
+.save-cancel-btns {
+  margin-top: 20px;
+  display: flex;
+  justify-content: end;
+  .cancel-btn {
+    margin-left: 10px;
+  }
+}

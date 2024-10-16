@@ -143,6 +143,7 @@ const EditPoll = ({ draft, makeItLive }: EditPollProps) => {
     const updatedPolls = savedPolls.map((poll: Poll) =>
       poll.id === draft.id ? { ...poll, questions: updatedQuestions } : poll
     );
+    draft.questions = updatedQuestions;
     setSavedPolls(updatedPolls);
   };
 

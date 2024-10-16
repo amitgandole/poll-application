@@ -1,12 +1,22 @@
 export interface Option {
-  id: string;
+  id: number;
   optionText: string;
 }
 
 export interface Question {
-  id: string;
+  id: number;
   questionText: string;
   options: Option[];
+}
+
+export interface PollResponse {
+  userId: string;
+  responses: Response[];
+}
+
+export interface Response {
+  questionId: number;
+  selectedOptionId: number;
 }
 
 export interface Poll {
@@ -16,4 +26,5 @@ export interface Poll {
   createdBy: string;
   createdAt: string;
   questions: Question[];
+  responses?: PollResponse[];
 }

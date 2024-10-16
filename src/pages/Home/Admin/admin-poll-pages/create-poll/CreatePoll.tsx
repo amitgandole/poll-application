@@ -1,15 +1,18 @@
-import { Button, Card, Input } from "antd";
+import { Button, Card, Input, Modal } from "antd";
 import useLocalStorage from "../../../../../utils/useLocalStorage";
 import "./CreatePoll.css";
 import { Poll } from "../../../../../interfaces/Poll";
 import { useEffect, useState } from "react";
-import EditOutlined from "@ant-design/icons/lib/icons/EditOutlined";
 import {
-  CheckOutlined,
-  CloseOutlined,
-  PlusCircleOutlined,
+  DeleteOutlined,
+  ExclamationCircleOutlined,
+  EditOutlined,
 } from "@ant-design/icons";
 import generateUniqueId from "../../../../../utils/useUniqueId";
+import CreateNewPoll from "./CreateNewPoll";
+import modal from "antd/es/modal";
+import EditPoll from "./EditPoll";
+import { AddButton } from "./CreatePoll-helper";
 
 const CreatePoll = () => {
   // Design card for saved polls
@@ -18,12 +21,19 @@ const CreatePoll = () => {
   3. Drafts polls will be displayed in card
   */
 
-  const [savedPolls, setSavedPolls] = useLocalStorage("savedPolls", []);
   const [draftsPolls, setDraftsPolls] = useState<Poll[]>([]);
-  const [showCreatePollTitle, setShowCreatePollTitle] = useState(false);
-  const [showCreatePoll, setShowCreatePoll] = useState(false);
-  const [pollTitle, setPollTitle] = useState("");
-  const [currentLoggedInUser] = useLocalStorage("currentLoggedInUser", []);
+  const [showEditPoll, setShowEditPoll] = useState(false);
+  const [showCreatNewPoll, setShowCreatNewPoll] = useState(false);
+  const [savedPolls, setSavedPolls] = useLocalStorage("savedPolls", []);
+  const emptyPoll: Poll = {
+    id: generateUniqueId(),
+    label: "",
+    status: "draft",
+    createdBy: "",
+    createdAt: new Date().toISOString(),
+    questions: [],
+  };
+  const [currentPoll, setCurrentPoll] = useState<Poll>(emptyPoll);
 
   useEffect(() => {
     const drafts = savedPolls.filter((poll: Poll) => poll.status === "draft");
@@ -31,21 +41,28 @@ const CreatePoll = () => {
     setDraftsPolls(drafts);
   }, [savedPolls]);
 
-  const handleSavePollTitle = () => {
-    const newPoll: Poll = {
-      id: generateUniqueId(),
-      label: pollTitle,
-      status: "draft",
-      createdBy: currentLoggedInUser[0].firstName,
-      createdAt: new Date().toISOString(),
-      questions: [],
-    };
+  const deleteDraftPoll = (draft: Poll) => {
+    console.log(draft);
 
-    setSavedPolls([...savedPolls, newPoll]);
-    setShowCreatePollTitle(false);
+    const updatedDrafts = draftsPolls.filter((d) => d.id !== draft.id);
+    modal.confirm({
+      title: "Confirm",
+      icon: <ExclamationCircleOutlined />,
+      content: `Do you want to delete ${draft.label.toLocaleUpperCase()} ?`,
+      okButtonProps: { style: { backgroundColor: "red" } },
+      okText: "Delete",
+      cancelText: "Cancel",
+      onOk() {
+        setSavedPolls(updatedDrafts);
+      },
+    });
   };
+
   const editDraftPoll = (draft: Poll) => {
     console.log(draft);
+    setCurrentPoll(draft);
+    setShowCreatNewPoll(false);
+    setShowEditPoll(true);
   };
 
   const DraftPolls = () => {
@@ -55,14 +72,19 @@ const CreatePoll = () => {
           {draftsPolls.length > 0 ? (
             draftsPolls.map((draft) => {
               return (
-                <Card
-                  key={draft.id}
-                  className="draft-poll-card"
-                  onClick={() => editDraftPoll(draft)}
-                >
+                <Card key={draft.id} className="draft-poll-card">
                   <div className="draft-card-content">
                     <span>{draft.label}</span>
-                    <EditOutlined className="edit-icon" />
+                    <div className="draft-card-icons">
+                      <EditOutlined
+                        className="draft-card-icon edit-icon"
+                        onClick={() => editDraftPoll(draft)}
+                      />
+                      <DeleteOutlined
+                        className="draft-card-icon delete-icon"
+                        onClick={() => deleteDraftPoll(draft)}
+                      />
+                    </div>
                   </div>
                 </Card>
               );
@@ -80,60 +102,70 @@ const CreatePoll = () => {
   };
 
   const handleCreatePollButton = () => {
-    setShowCreatePoll(false);
-    setShowCreatePollTitle(true);
+    setShowEditPoll(false);
+    setShowCreatNewPoll(true);
   };
 
-  const AddButton = () => {
-    return (
-      <div className="create-poll">
-        <PlusCircleOutlined
-          className="add-poll-icon"
-          onClick={() => handleCreatePollButton()}
-        />
-      </div>
-    );
+  const handleMakeItLiveBtn = (draft: Poll) => {
+    console.log(draft);
+
+    modal.confirm({
+      title: "Confirm",
+      icon: <ExclamationCircleOutlined />,
+      content: `Do you want to make ${draft.label.toLocaleUpperCase()} live ?`,
+      okButtonProps: { style: { backgroundColor: "green" } },
+      okText: "Yes",
+      cancelText: "No",
+      onOk() {
+        savedPolls.map((poll: Poll) => {
+          if (draft.id === poll.id) {
+            poll.status = "live";
+            setSavedPolls([...savedPolls]);
+            setShowCreatNewPoll(false);
+            setShowEditPoll(false);
+          }
+        });
+      },
+    });
   };
 
   return (
     <div>
-      {!showCreatePollTitle && (
-        <div className="poll-container">
+      {!showCreatNewPoll && !showEditPoll && (
+        <div className="container">
           {" "}
           <DraftPolls />
-          <AddButton />
+          <AddButton handleAddNewButton={handleCreatePollButton} />
         </div>
       )}
 
-      {showCreatePollTitle && !showCreatePoll && (
-        <div className="poll-container">
-          <Card
-            title="What should be the poll title?"
-            className="poll-title-card"
+      {showCreatNewPoll && (
+        <div className="container">
+          <CreateNewPoll
+            showCreatNewPoll={showCreatNewPoll}
+            savedPolls={savedPolls}
+            setSavedPolls={setSavedPolls}
+            currentPoll={currentPoll}
+            setShowCreatNewPoll={setShowCreatNewPoll}
+            setCurrentPoll={setCurrentPoll}
+            setShowEditPoll={setShowEditPoll}
+          />
+        </div>
+      )}
+
+      {showEditPoll && (
+        <div>
+          <a
+            onClick={() => {
+              setShowCreatNewPoll(false);
+              setShowEditPoll(false);
+            }}
           >
-            <Input
-              value={pollTitle}
-              placeholder="Enter poll title..."
-              onChange={(e) => setPollTitle(e.target.value)}
-            ></Input>
-            <div className="save-cancel-btns">
-              <Button
-                type="primary"
-                icon={<CheckOutlined />}
-                className="save-btn"
-                onClick={() => handleSavePollTitle()}
-              >
-                Save
-              </Button>
-              <Button
-                icon={<CloseOutlined />}
-                className="cancel-btn"
-                onClick={() => setShowCreatePollTitle(false)}
-              >
-                Cancel
-              </Button>
-            </div>
-          </Card>
+            {"<<<<<< Go to Drafts"}
+          </a>
+          <div className="container">
+            <EditPoll draft={currentPoll} makeItLive={handleMakeItLiveBtn} />
+          </div>
         </div>
       )}
     </div>

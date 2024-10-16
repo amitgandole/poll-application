@@ -1,4 +1,4 @@
-.poll-container {
+.container {
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -8,7 +8,13 @@
 
 .poll-title-card {
   width: 100%;
-  max-width: 500px;
+  max-width: 600px;
+  margin-bottom: 20px;
+}
+
+.poll-question-card {
+  width: 100%;
+  max-width: 600px;
   margin-bottom: 20px;
 }
 
@@ -28,7 +34,6 @@
 
 .draft-poll-card:hover {
   border-left: 10px solid rgb(31, 195, 236);
-  cursor: pointer;
   font-weight: bold;
 }
 
@@ -54,11 +59,6 @@
   margin-top: 10px;
 }
 
-.edit-icon {
-  font-size: 18px;
-  color: #000;
-}
-
 .save-cancel-btns {
   margin-top: 20px;
   display: flex;
@@ -66,4 +66,20 @@
   .cancel-btn {
     margin-left: 10px;
   }
+}
+
+.draft-card-icon {
+  font-size: 18px;
+  color: #000;
+  padding-left: 10px;
+}
+
+.edit-icon:hover {
+  color: rgb(36, 102, 224);
+  cursor: pointer;
+}
+
+.delete-icon:hover {
+  color: rgb(255, 54, 54);
+  cursor: pointer;
 }

@@ -8,18 +8,6 @@ export interface Question {
   questionText: string;
   options: Option[];
 }
-
-export interface PollResponse {
-  userId: string;
-  pollStatus?: string;
-  responses: { [questionId: number]: number };
-}
-
-export interface Response {
-  questionId: number;
-  selectedOptionId: number;
-}
-
 export interface Poll {
   id: number;
   label: string;
@@ -27,7 +15,6 @@ export interface Poll {
   createdBy: string;
   createdAt: string;
   questions: Question[];
-  responses?: PollResponse[];
 }
 
 export interface UserResponse {

@@ -15,6 +15,10 @@ const CreatePoll = lazy(
 const ClosedPoll = lazy(
   () => import("../pages/Home/Admin/admin-poll-pages/ClosedPoll")
 );
+const PollList = lazy(() => import("../pages/Home/User/PollList"));
+const ParticipatePoll = lazy(
+  () => import("../pages/Home/User/ParticipatePoll")
+);
 
 interface Route {
   path: string;
@@ -51,6 +55,18 @@ export const PRIVATE_ROUTES: LazyRoute[] = [
       {
         path: PATHS.user_home,
         component: UserHome,
+      },
+      {
+        path: PATHS.poll_list,
+        component: PollList,
+      },
+      {
+        path: `user-home/${PATHS.participate}/:pollId`,
+        component: ParticipatePoll,
+      },
+      {
+        path: `poll-list/${PATHS.participate}/:pollId`,
+        component: ParticipatePoll,
       },
     ],
   },

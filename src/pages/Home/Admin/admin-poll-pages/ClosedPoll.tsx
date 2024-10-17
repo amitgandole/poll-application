@@ -8,10 +8,10 @@ import ExclamationCircleOutlined from "@ant-design/icons/lib/icons/ExclamationCi
 
 type PollCardProps = {
   poll: Poll;
-  onClosePoll: (poll: Poll) => void;
+  handleShowResult: (poll: Poll) => void;
 };
 
-const PollCard = ({ poll, onClosePoll }: PollCardProps) => {
+const PollCard = ({ poll, handleShowResult }: PollCardProps) => {
   return (
     <Card key={poll.id} className="draft-poll-card">
       <div className="draft-card-content">
@@ -20,7 +20,7 @@ const PollCard = ({ poll, onClosePoll }: PollCardProps) => {
           <Button
             type="primary"
             className="close-poll-btn"
-            onClick={() => onClosePoll(poll)}
+            onClick={() => handleShowResult(poll)}
           >
             See Results
           </Button>
@@ -61,7 +61,7 @@ const ClosedPoll = () => {
               <PollCard
                 key={poll.id}
                 poll={poll}
-                onClosePoll={handleClosePoll}
+                handleShowResult={handleClosePoll}
               />
             ))
           ) : (

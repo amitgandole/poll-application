@@ -11,7 +11,8 @@ export interface Question {
 
 export interface PollResponse {
   userId: string;
-  responses: Response[];
+  pollStatus?: string;
+  responses: { [questionId: number]: number };
 }
 
 export interface Response {
@@ -27,4 +28,16 @@ export interface Poll {
   createdAt: string;
   questions: Question[];
   responses?: PollResponse[];
+}
+
+export interface UserResponse {
+  id: number;
+  pollId: number;
+  pollStatus?: string;
+  userId: number;
+  responses: UserPollResponse;
+}
+
+export interface UserPollResponse {
+  [questionId: number]: number;
 }

@@ -1,8 +1,7 @@
 import { Card } from "antd";
 import { ArrowRightOutlined } from "@ant-design/icons";
 import "./AdminHome.css";
-import { Navigate, useNavigate } from "react-router-dom";
-import { handleSiderMenuClick } from "../Home.helper";
+import { useNavigate } from "react-router-dom";
 import { PATHS } from "../../../utils/Constants";
 
 const AdminHome = () => {

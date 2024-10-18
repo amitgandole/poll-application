@@ -44,7 +44,7 @@ const CreatePoll = () => {
   const deleteDraftPoll = (draft: Poll) => {
     console.log(draft);
 
-    const updatedDrafts = draftsPolls.filter((d) => d.id !== draft.id);
+    const updatedPolls = savedPolls.filter((d: Poll) => d.id !== draft.id);
     modal.confirm({
       title: "Confirm",
       icon: <ExclamationCircleOutlined />,
@@ -53,7 +53,7 @@ const CreatePoll = () => {
       okText: "Delete",
       cancelText: "Cancel",
       onOk() {
-        setSavedPolls(updatedDrafts);
+        setSavedPolls(updatedPolls);
       },
     });
   };

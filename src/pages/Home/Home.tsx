@@ -10,9 +10,10 @@ import Sider from "antd/es/layout/Sider";
 
 import {
   handleRoleBasedNavigation,
-  getSelectedKey,
   getSiderMenu,
   handleSiderMenuClick,
+  getSelectedKeyAdmin,
+  getSelectedKeyUser,
 } from "./Home.helper";
 
 import "./Home.css";
@@ -60,21 +61,30 @@ const Home = () => {
           </h2>
         </div>
 
-        <Button
-          type="link"
-          className="logout-button"
-          onClick={handleLogout}
-          icon={<LogoutOutlined />}
-        >
-          Logout
-        </Button>
+        <div className="left-text">
+          <span style={{ fontWeight: "bold", color: "grey" }}>
+            {new Date().toUTCString()}
+          </span>
+          <Button
+            type="link"
+            className="logout-button"
+            onClick={handleLogout}
+            icon={<LogoutOutlined />}
+          >
+            Logout
+          </Button>
+        </div>
       </Header>
       <Layout>
         <Sider width="10%" theme="light" className="sider">
           <Menu
             mode="inline"
-            selectedKeys={[getSelectedKey(location)]}
-            items={getSiderMenu()}
+            selectedKeys={
+              currentLoggedInUser[0].role === "admin"
+                ? [getSelectedKeyAdmin(location)]
+                : [getSelectedKeyUser(location)]
+            }
+            items={getSiderMenu(currentLoggedInUser[0].role)}
             onClick={(e) => handleSiderMenuClick(e, navigate)}
           />
         </Sider>

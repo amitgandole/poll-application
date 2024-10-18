@@ -22,7 +22,7 @@ export const handleRoleBasedNavigation = (
   }
 };
 
-export const getSelectedKey = (location: Location): string => {
+export const getSelectedKeyAdmin = (location: Location): string => {
   if (location.pathname.includes("create-poll")) return "1";
   if (location.pathname.includes("active-polls")) return "2";
   if (location.pathname.includes("closed-polls")) return "3";
@@ -30,28 +30,51 @@ export const getSelectedKey = (location: Location): string => {
   return "";
 };
 
-export const getSiderMenu = (): MenuProps["items"] => [
-  {
-    key: "4",
-    icon: <HomeOutlined className="sider-icon" />,
-    label: "Go To Home",
-  },
-  {
-    key: "2",
-    icon: <LaptopOutlined className="sider-icon" />,
-    label: "Active Polls",
-  },
-  {
-    key: "3",
-    icon: <CloseCircleOutlined className="sider-icon" />,
-    label: "Closed Poll",
-  },
-  {
-    key: "1",
-    icon: <EditOutlined className="sider-icon" />,
-    label: "Create Poll",
-  },
-];
+export const getSelectedKeyUser = (location: Location): string => {
+  if (location.pathname.includes("poll-list")) return "5";
+  if (location.pathname.includes("user-home")) return "4";
+  return "";
+};
+
+export const getSiderMenu = (role: string): MenuProps["items"] => {
+  if (role === "user") {
+    return [
+      {
+        key: "4",
+        icon: <HomeOutlined className="sider-icon" />,
+        label: "Dashboard",
+      },
+      {
+        key: "5",
+        icon: <LaptopOutlined className="sider-icon" />,
+        label: "My Polls",
+      },
+    ];
+  }
+
+  return [
+    {
+      key: "4",
+      icon: <HomeOutlined className="sider-icon" />,
+      label: "Dashboard",
+    },
+    {
+      key: "2",
+      icon: <LaptopOutlined className="sider-icon" />,
+      label: "Active Polls",
+    },
+    {
+      key: "3",
+      icon: <CloseCircleOutlined className="sider-icon" />,
+      label: "Closed Poll",
+    },
+    {
+      key: "1",
+      icon: <EditOutlined className="sider-icon" />,
+      label: "Create Poll",
+    },
+  ];
+};
 
 export const handleSiderMenuClick = (
   e: { key: string },
@@ -61,4 +84,12 @@ export const handleSiderMenuClick = (
   if (route) {
     navigate(route);
   }
+};
+
+export const getLocalStorageData = (key: string) => {
+  return JSON.parse(localStorage.getItem(key) || "[]");
+};
+
+export const setLocalStorageData = (key: string, response: any) => {
+  localStorage.setItem(key, JSON.stringify(response));
 };

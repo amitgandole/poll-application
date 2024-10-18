@@ -20,6 +20,8 @@ export const PATHS = {
   active_poll: "active-polls",
   create_poll: "create-poll",
   closed_poll: "closed-polls",
+  poll_list: "poll-list",
+  participate: "participate",
 };
 
 export const KEY_TO_ROUTE: { [key: string]: string } = {
@@ -27,4 +29,5 @@ export const KEY_TO_ROUTE: { [key: string]: string } = {
   "2": PATHS.active_poll,
   "3": PATHS.closed_poll,
   "4": PATHS.home,
+  "5": PATHS.poll_list,
 };

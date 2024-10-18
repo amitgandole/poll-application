@@ -85,3 +85,11 @@ export const handleSiderMenuClick = (
     navigate(route);
   }
 };
+
+export const getLocalStorageData = (key: string) => {
+  return JSON.parse(localStorage.getItem(key) || "[]");
+};
+
+export const setLocalStorageData = (key: string, response: any) => {
+  localStorage.setItem(key, JSON.stringify(response));
+};

@@ -1,6 +1,6 @@
 import { useNavigate, useParams } from "react-router-dom";
 import useLocalStorage from "../../../utils/useLocalStorage";
-import { useEffect, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import {
   Option,
   Poll,
@@ -11,6 +11,8 @@ import {
 import generateUniqueId from "../../../utils/useUniqueId";
 import { Button, Card, Radio } from "antd";
 import { PATHS } from "../../../utils/Constants";
+import { User } from "../../../interfaces/User";
+import { getLocalStorageData, setLocalStorageData } from "../Home.helper";
 
 type PollCardProps = {
   question: Question;
@@ -54,7 +56,10 @@ const PollCard = ({
 };
 
 const PollList = () => {
-  const [savedPolls, setSavedPolls] = useLocalStorage("savedPolls", []);
+  const [savedPolls, setSavedPolls] = useState<Poll[]>([]);
+  const [userResponses, setUserResponses] = useState<UserResponse[]>([]);
+  const [currentLoggedInUser, setCurrentLoggedInUser] = useState<User[]>([]);
+
   const emptyPoll: Poll = {
     id: 0,
     label: "",
@@ -63,20 +68,26 @@ const PollList = () => {
     createdAt: new Date().toISOString(),
     questions: [],
   };
-  const [currentPoll, setCurrentPoll] = useState<Poll>(emptyPoll);
-  const [userResponses, setUserResponses] = useLocalStorage(
-    "userResponses",
-    []
-  );
-  const [currentLoggedInUser] = useLocalStorage("currentLoggedInUser", []);
+
   const { pollId } = useParams();
   const navigate = useNavigate();
   console.log(pollId);
 
-  useEffect(() => {
-    const poll = savedPolls.find((p: Poll) => p.id === Number(pollId));
-    setCurrentPoll(poll || emptyPoll);
+  const currentPoll = useMemo(() => {
+    return savedPolls.find((p: Poll) => p.id === Number(pollId)) || emptyPoll;
   }, [pollId, savedPolls]);
+
+  useEffect(() => {
+    const savedPollsFromStorage = getLocalStorageData("savedPolls");
+    const savedResponsesFromStorage = getLocalStorageData("userResponses");
+    const savedCurrentUserFromStorage = getLocalStorageData(
+      "currentLoggedInUser"
+    );
+
+    setSavedPolls(savedPollsFromStorage);
+    setUserResponses(savedResponsesFromStorage);
+    setCurrentLoggedInUser(savedCurrentUserFromStorage);
+  }, []);
 
   const handleOnAnswerClick = (question: Question, optionAns: Option) => {
     const updatedResponses = [...userResponses];
@@ -99,6 +110,7 @@ const PollList = () => {
     }
 
     setUserResponses(updatedResponses);
+    setLocalStorageData("userResponses", updatedResponses);
   };
 
   const getSelectedResponseId = (queId: number) => {
@@ -118,7 +130,7 @@ const PollList = () => {
     if (!userResponse) return false;
 
     return currentPoll.questions?.every(
-      (que) => userResponse.responses[que.id] !== undefined
+      (que: Question) => userResponse.responses[que.id] !== undefined
     );
   };
 
@@ -131,7 +143,7 @@ const PollList = () => {
     const updatedResponses = [...userResponses];
     const userResponse = getCurrentUserResponse();
     if (userResponse) userResponse.pollStatus = "completed";
-    setUserResponses(updatedResponses);
+    setLocalStorageData("userResponses", updatedResponses);
     navigate(PATHS.home);
   };
 
@@ -166,7 +178,7 @@ const PollList = () => {
         >
           <div className="scrollable-cards">
             {currentPoll.questions.length > 0 ? (
-              currentPoll.questions.map((question) => (
+              currentPoll.questions.map((question: Question) => (
                 <PollCard
                   key={question.id}
                   question={question}

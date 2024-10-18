@@ -128,6 +128,11 @@ code {
   margin-right: 8px;
 }
 
+.result-modal {
+  overflow: auto;
+  max-height: 750px;
+}
+
 @keyframes blink {
   0% {
     opacity: 1;

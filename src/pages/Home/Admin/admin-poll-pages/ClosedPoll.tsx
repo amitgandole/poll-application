@@ -1,10 +1,9 @@
-import { Button, Card } from "antd";
+import ReactEcharts from "echarts-for-react";
+import { Button, Card, Modal } from "antd";
 import useLocalStorage from "../../../../utils/useLocalStorage";
-import { Poll } from "../../../../interfaces/Poll";
+import { Poll, UserResponse, Question } from "../../../../interfaces/Poll";
 import { useEffect, useState } from "react";
 import "./create-poll/CreatePoll.css";
-import modal from "antd/es/modal";
-import ExclamationCircleOutlined from "@ant-design/icons/lib/icons/ExclamationCircleOutlined";
 
 type PollCardProps = {
   poll: Poll;
@@ -31,24 +30,106 @@ const PollCard = ({ poll, handleShowResult }: PollCardProps) => {
 };
 
 const ClosedPoll = () => {
-  const [savedPolls, setSavedPolls] = useLocalStorage("savedPolls", []);
+  const [savedPolls] = useLocalStorage("savedPolls", []);
+  const [userResponses] = useLocalStorage("userResponses", []);
   const [closedPolls, setClosedPolls] = useState<Poll[]>([]);
+  const [selectedPoll, setSelectedPoll] = useState<Poll | null>(null);
+  const [isModalVisible, setIsModalVisible] = useState(false);
 
   useEffect(() => {
-    const filteredActivePolls = savedPolls.filter(
+    const filteredClosedPolls = savedPolls.filter(
       (poll: Poll) => poll.status === "closed"
     );
-    setClosedPolls(filteredActivePolls);
+    setClosedPolls(filteredClosedPolls);
   }, [savedPolls]);
 
-  const handleClosePoll = (currentPoll: Poll) => {
-    modal.confirm({
-      title: "Confirm",
-      icon: <ExclamationCircleOutlined />,
-      content: `Do you want to close ${currentPoll.label.toLocaleUpperCase()} ?`,
-      okButtonProps: { style: { backgroundColor: "red" } },
-      okText: "Delete",
-      onOk() {},
+  const handleShowResult = (currentPoll: Poll) => {
+    setSelectedPoll(currentPoll);
+    setIsModalVisible(true);
+  };
+
+  const handleModalClose = () => {
+    setIsModalVisible(false);
+    setSelectedPoll(null);
+  };
+
+  const getChartData = (question: Question) => {
+    if (!selectedPoll) return [];
+
+    const responsesForPoll = userResponses.filter((response: UserResponse) => {
+      return response.pollId === selectedPoll.id;
+    });
+
+    if (!responsesForPoll.length) return [];
+
+    const optionCounts: { [key: number]: number } = {};
+    question.options.forEach((option) => {
+      optionCounts[option.id] = 0;
+    });
+
+    responsesForPoll.forEach((response: UserResponse) => {
+      const optionId = response.responses[question.id];
+      if (optionCounts[optionId] !== undefined) {
+        optionCounts[optionId]++;
+      }
+    });
+
+    return question.options.map((option) => ({
+      value: optionCounts[option.id],
+      name: option.optionText,
+    }));
+  };
+
+  const renderCharts = () => {
+    if (!selectedPoll) return `<span>No Response!<span/>`;
+
+    return selectedPoll.questions.map((question, index) => {
+      const chartData = getChartData(question);
+      if (!chartData.length) {
+        return (
+          <Card
+            key={question.id}
+            className="chart-container"
+            title={question.questionText}
+            style={{ display: "block" }}
+            hoverable={true}
+          >
+            <p>No response recieved!</p>
+          </Card>
+        );
+      }
+      const options = {
+        tooltip: {
+          trigger: "item",
+        },
+        series: [
+          {
+            name: "Options",
+            type: "pie",
+            radius: "50%",
+            data: chartData,
+            emphasis: {
+              itemStyle: {
+                shadowBlur: 10,
+                shadowOffsetX: 0,
+                shadowColor: "rgba(0, 0, 0, 0.5)",
+              },
+            },
+          },
+        ],
+      };
+
+      return (
+        <Card
+          key={question.id}
+          className="chart-container"
+          title={question.questionText}
+          style={{ marginBottom: "10px" }}
+          hoverable={true}
+        >
+          <ReactEcharts option={options} />
+        </Card>
+      );
     });
   };
 
@@ -61,18 +142,29 @@ const ClosedPoll = () => {
               <PollCard
                 key={poll.id}
                 poll={poll}
-                handleShowResult={handleClosePoll}
+                handleShowResult={handleShowResult}
               />
             ))
           ) : (
             <Card className="draft-poll-card">
               <div className="draft-card-content">
-                <span>No Active Polls!</span>
+                <span>No Closed Polls Available!</span>
               </div>
             </Card>
           )}
         </div>
       </Card>
+
+      <Modal
+        title={`Results for ${selectedPoll?.label}`}
+        className="result-modal"
+        open={isModalVisible}
+        onCancel={handleModalClose}
+        footer={null}
+        width={800}
+      >
+        {renderCharts()}
+      </Modal>
     </div>
   );
 };
